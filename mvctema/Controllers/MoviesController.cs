@@ -12,6 +12,8 @@ namespace mvctema.Controllers
 {
     public class MoviesController : Controller
     {
+
+        List<Movies> movies = new List<Movies>();
         private readonly mvctemaContext _context;
 
         public MoviesController(mvctemaContext context)
