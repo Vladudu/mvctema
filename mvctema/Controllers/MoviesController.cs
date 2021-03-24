@@ -116,15 +116,14 @@ namespace mvctema.Controllers
         }
 
         // GET: Movies/Delete/5
-        public async Task<IActionResult> Delete(Guid? id)
+        public IActionResult Delete(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var movies = await _context.Movies
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var movies = listamovies.Find(x => x.ID == id);
             if (movies == null)
             {
                 return NotFound();
@@ -136,11 +135,10 @@ namespace mvctema.Controllers
         // POST: Movies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public IActionResult DeleteConfirmed(Guid id)
         {
-            var movies = await _context.Movies.FindAsync(id);
-            _context.Movies.Remove(movies);
-            await _context.SaveChangesAsync();
+            var movies = listamovies.Find(x => x.ID == id);
+            listamovies.Remove(movies);
             return RedirectToAction(nameof(Index));
         }
 
