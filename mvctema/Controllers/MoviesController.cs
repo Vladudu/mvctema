@@ -13,7 +13,14 @@ namespace mvctema.Controllers
     public class MoviesController : Controller
     {
 
-        List<Movies> movies = new List<Movies>();
+        static List<Movies> listamovies = new List<Movies>()
+        {
+            new Movies() { ID = Guid.NewGuid(), Name = "Movie 1", Year = 2020, Lenght = "2 ore" },
+            new Movies() { ID = Guid.NewGuid(), Name = "Movie 1", Year = 2020, Lenght = "2 ore" },
+            new Movies() { ID = Guid.NewGuid(), Name = "Movie 1", Year = 2020, Lenght = "2 ore" },
+            new Movies() { ID = Guid.NewGuid(), Name = "Movie 1", Year = 2020, Lenght = "2 ore" },
+            new Movies() { ID = Guid.NewGuid(), Name = "Movie 1", Year = 2020, Lenght = "2 ore" },
+        };
         private readonly mvctemaContext _context;
 
         public MoviesController(mvctemaContext context)
@@ -22,9 +29,9 @@ namespace mvctema.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Movies.ToListAsync());
+            return View(listamovies);
         }
 
         // GET: Movies/Details/5
@@ -56,27 +63,28 @@ namespace mvctema.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name,Year,Lenght")] Movies movies)
+        public IActionResult Create([Bind("ID,Name,Year,Lenght")] Movies movies)
         {
             if (ModelState.IsValid)
             {
                 movies.ID = Guid.NewGuid();
-                _context.Add(movies);
-                await _context.SaveChangesAsync();
+
+                listamovies.Add(movies);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(movies);
         }
 
         // GET: Movies/Edit/5
-        public async Task<IActionResult> Edit(Guid? id)
+        public IActionResult Edit(Guid? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var movies = await _context.Movies.FindAsync(id);
+            var movies = listamovies.FirstOrDefault(x => x.ID == id);
             if (movies == null)
             {
                 return NotFound();
@@ -98,23 +106,11 @@ namespace mvctema.Controllers
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(movies);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MoviesExists(movies.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                var currentMovie = listamovies.FirstOrDefault(x => x.ID == id);
+                currentMovie.Name = movies.Name;
+                currentMovie.Year = movies.Year;
+                currentMovie.Lenght = movies.Lenght;
+                return RedirectToAction(nameof(Index)); 
             }
             return View(movies);
         }

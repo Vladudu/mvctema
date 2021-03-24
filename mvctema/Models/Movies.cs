@@ -10,6 +10,6 @@ namespace mvctema.Models
         public Guid ID { get; set; }
         public string Name { get; set; }
         public int Year { get; set; }
-        public int Lenght { get; set; }
+        public string Lenght { get; set; }
     }
 }
